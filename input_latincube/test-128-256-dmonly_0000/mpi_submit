@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH --partition=short
+#SBATCH --job-name=test-128-256-dmonly_0000
+#SBATCH --time=2:0:00
+#SBATCH --nodes=256
+#SBATCH --ntasks-per-node=2
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=115G
+#SBATCH --mail-type=end
+#SBATCH --mail-user=mho026@ucr.edu
+export OMP_NUM_THREADS=32
+module unload openmpi
+module load mpich
+module list
+mpirun /rhome/yyang440/bigdata/MP-Gadget3/gadget/MP-Gadget mpgadget.param
