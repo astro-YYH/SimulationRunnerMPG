@@ -66,7 +66,7 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'degenerate', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1,           wa_fld:   float = 0,          
+            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04,          
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
@@ -108,6 +108,9 @@ class SimulationICs(object):
 
         assert wa_fld < 1 and wa_fld > -1
         self.wa_fld = wa_fld
+
+        assert N_ur > 0
+        self.N_ur = N_ur
         
         #Neutrino accuracy for CLASS
         self.nu_acc  = nu_acc
@@ -262,9 +265,11 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Set up massive neutrinos
         if self.m_nu > 0:
+            print("Setting up massive neutrinos...\n")
             gparams['m_ncdm'] = '%.8f,%.8f,%.8f' % (numass[2], numass[1], numass[0])
             gparams['N_ncdm'] = 3
-            gparams['N_ur'] = 0.00641
+            # gparams['N_ur'] = 0.00641
+            gparams['N_ur'] = self.N_ur - 3
             #Neutrino accuracy: Default pk_ref.pre has tol_ncdm_* = 1e-10,
             #which takes 45 minutes (!) on my laptop.
             #tol_ncdm_* = 1e-8 takes 20 minutes and is machine-accurate.
@@ -308,6 +313,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         classconf.write()
 
         # feed in the parameters and generate the powerspec object
+        print("Generating the power spectra...\n")
         engine  = CLASS.ClassEngine(pre_params)
         powspec = CLASS.Spectra(engine) # powerspec is an object
 
@@ -321,6 +327,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Save directory
         #Get and save the transfer functions
+        print("Getting and saving the transfer functions...")
         for zz in camb_zz:
             trans = powspec.get_transfer(z=zz)
 
@@ -562,6 +569,10 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config["w0_fld"]      = self.w0_fld
         config["wa_fld"]      = self.wa_fld
 
+        T_CMB = 2.7255
+        omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
+        config["Omega_ur"]    = omegag * (1 + 0.22710731766023898 * self.N_ur) 
+
         #OmegaBaryon should be zero for gadget if we don't have gas particles
         config['OmegaBaryon'] = self.omegab * False # self.separate_gas; 
                                                     # always False for dm-only
@@ -597,7 +608,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['WindModel'] = 'nowind'
         config['BlackHoleOn'] = 0
         config['OutputPotential'] = 0
-        config['MetalReturnOn'] = 0
+        # config['MetalReturnOn'] = 0   # unknown parameter
 
         # Removed due to no need for baryon
         # if self.separate_gas:
