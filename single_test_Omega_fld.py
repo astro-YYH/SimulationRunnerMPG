@@ -13,10 +13,10 @@ nproc = 256 # Total number of processors
 cores = 32 # Number of cores per node
 
 w0_fld = -1.1
-wa_fld = .1
+wa_fld = .2
 
 # set the paths
-outdir = "test-128-256-Omega_fld-0000" # Output folder name
+outdir = "/rhome/yyang440/bigdata/test_sims/test-128-256-Omega_fld-0000" # Output folder name
 gadget_dir = "~/bigdata/MP-Gadget3" # Your path to MP-Gadget folder
 python = "python" # Your path to python binary
 
