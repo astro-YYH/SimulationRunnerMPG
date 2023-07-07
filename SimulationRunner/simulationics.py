@@ -67,7 +67,7 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'degenerate', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04,  MWDM_therm: float = 0,        
+            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04, alpha_s: float = 0, MWDM_therm: float = 0,        
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
@@ -113,6 +113,10 @@ class SimulationICs(object):
 
         assert N_ur > 0
         self.N_ur = N_ur
+
+        assert alpha_s < 1 and alpha_s > -1
+        self.alpha_s = alpha_s
+
 
         assert MWDM_therm >= 0
         self.MWDM_therm = MWDM_therm
@@ -265,7 +269,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         omeganu = self.m_nu/93.14/self.hubble**2
         omcdm   = (self.omega0 - self.omegab) - omeganu
         gparams = {'h': self.hubble, 'Omega_cdm': omcdm,'Omega_b': self.omegab,
-            'Omega_k': 0, 'n_s': self.ns, 'A_s': self.scalar_amp}
+            'Omega_k': 0, 'n_s': self.ns, 'A_s': self.scalar_amp, 'alpha_s': self.alpha_s}
 
         #Lambda is computed self-consistently
         gparams['Omega_fld'] = 1 - self.omega0
