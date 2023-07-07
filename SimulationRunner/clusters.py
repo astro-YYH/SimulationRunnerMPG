@@ -269,8 +269,8 @@ class BIOClass(ClusterClass):
         qstring += prefix + " --job-name={}\n".format(name)
         qstring += prefix + " --time={}\n".format(self.timestring(timelimit))
         qstring += prefix + " --nodes={}\n".format(str(int(nproc/cores)))
-        print("nproc = {}".format(str(int(nproc))))
-        print("nodes = {}".format(str(int(nproc/cores))))
+        # print("nproc = {}".format(str(int(nproc))))
+        # print("nodes = {}".format(str(int(nproc/cores))))
 
         #Number of tasks (processes) per node
         qstring += prefix + " --ntasks-per-node=2\n"

@@ -1,4 +1,10 @@
+import datetime
+
+current_time = datetime.datetime.now()
+
+print("Importing simulationics, clusters...", current_time)
 from SimulationRunner import simulationics, clusters
+print("Imported.", current_time, "\n")
 import os
 
 # set the desired input parameters for your simulation
@@ -16,22 +22,26 @@ m_nu = .1 # total neutrino mass
 w0_fld = -1.1
 wa_fld = .2
 N_ur = 3.5
+MWDM_therm = 1.
 
 # set the paths
-outdir = "/rhome/yyang440/bigdata/test_sims/test-128-256-nu-0000" # Output folder name
+outdir = "/rhome/yyang440/bigdata/test_sims/test-128-256-WDM-0000" # Output folder name
 gadget_dir = "~/bigdata/MP-Gadget3" # Your path to MP-Gadget folder
 python = "python" # Your path to python binary
 
 # here you run on UCR biocluster
-# if you don't want to send emails to my email address, change the email in BIOClass class :)
+# if you don't want to send emails to my email address, change the email in
+# BIOClass class :)
+print("Creating cluster_calss...", current_time)
 cluster_class = clusters.BIOClass
+print("Done.", current_time)
 
 Sim = simulationics.SimulationICs(
     redshift = 99, redend = 0,
     box    = box, npart = npart,
     hubble = hubble, omega0 = omega0,
     omegab = omegab, scalar_amp = scalar_amp, ns = ns,
-    w0_fld=w0_fld, wa_fld=wa_fld, m_nu=m_nu, N_ur=N_ur,
+    w0_fld=w0_fld, wa_fld=wa_fld, m_nu=m_nu, N_ur=N_ur, MWDM_therm=MWDM_therm,
     nproc  = nproc, cores=cores,
     outdir = outdir,
     gadget_dir = gadget_dir,

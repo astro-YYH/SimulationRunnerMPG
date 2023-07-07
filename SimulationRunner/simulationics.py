@@ -15,6 +15,7 @@ import classylss.binding as CLASS
 from . import utils
 from . import clusters
 from . import cambpower
+import datetime
 
 # DM-only
 class SimulationICs(object):
@@ -66,13 +67,14 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'degenerate', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04,          
+            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04,  MWDM_therm: float = 0,        
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
             nproc:         int = 256,            cores:    int   = 32) -> None:
         #Check that input is reasonable and set parameters
         #In Mpc/h
+        print("__init__: initializing parameters...", datetime.datetime.now())
         assert box  < 20000
         self.box      = box
 
@@ -111,6 +113,10 @@ class SimulationICs(object):
 
         assert N_ur > 0
         self.N_ur = N_ur
+
+        assert MWDM_therm >= 0
+        self.MWDM_therm = MWDM_therm
+
         
         #Neutrino accuracy for CLASS
         self.nu_acc  = nu_acc
@@ -162,6 +168,7 @@ class SimulationICs(object):
         # sometime the path to python is slightly different, especially you have
         # multiple pythons and multiple virtual env
         self.python = python
+        print("__init__: done.", datetime.datetime.now(),"\n")
 
     def __repr__(self) -> str:
         print_string  = "MP-Gadget path: {}\n\n".format(self.gadget_dir)
@@ -246,6 +253,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         camb_output (str) : power specs directory. default: "camb_linear/"
         """
         #Load high precision defaults
+        print("cambfile: loading defaults...", datetime.datetime.now())
         pre_params = {
             'tol_background_integration': 1e-9, 'tol_perturb_integration' : 1.e-7,
             'tol_thermo_integration':1.e-5, 'k_per_decade_for_pk': 50,'k_bao_width': 8,
@@ -265,7 +273,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Set up massive neutrinos
         if self.m_nu > 0:
-            print("Setting up massive neutrinos...\n")
+            print("cambfile: setting up massive neutrinos...")
             gparams['m_ncdm'] = '%.8f,%.8f,%.8f' % (numass[2], numass[1], numass[0])
             gparams['N_ncdm'] = 3
             # gparams['N_ur'] = 0.00641
@@ -313,7 +321,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         classconf.write()
 
         # feed in the parameters and generate the powerspec object
-        print("Generating the power spectra...\n")
+        print("cambfile: generating the powerspec object...")
         engine  = CLASS.ClassEngine(pre_params)
         powspec = CLASS.Spectra(engine) # powerspec is an object
 
@@ -327,7 +335,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Save directory
         #Get and save the transfer functions
-        print("Getting and saving the transfer functions...")
+        print("cambfile: getting and saving the transfer functions...")
         for zz in camb_zz:
             trans = powspec.get_transfer(z=zz)
 
@@ -342,7 +350,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
                 camb_outdir, "ics_matterpow_" + self._camb_zstr(zz) + ".dat")
 
             np.savetxt(pkfile, np.vstack([trans['k'], pk_lin]).T)
-
+        print("cambfile: done.", datetime.datetime.now(),"\n")
         return camb_output
 
     def _camb_zstr(self, zz : float) -> str:
@@ -409,6 +417,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config["Omega_fld"]   = 1 - self.omega0
         config["w0_fld"]      = self.w0_fld
         config["wa_fld"]      = self.wa_fld
+        config["MWDM_therm"]  = self.MWDM_therm
         
         zstr = self._camb_zstr(self.redshift)
         config['FileWithInputSpectrum']    = camb_output + "ics_matterpow_"+ zstr + ".dat"
@@ -418,7 +427,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['MNue'] = numass[2]
         config['MNum'] = numass[1]
         config['MNut'] = numass[0]
-        assert config['WhichSpectrum'] == '2'
+        assert config['WhichSpectrum'] == '2'  # we use class to generate the spectrum (A_s and n_s are used by class, so they are not included in gadget ic paramfile)
         assert config['RadiationOn'] == '1'
         assert config['DifferentTransferFunctions'] == '1'
         assert config['InputPowerRedshift'] == '-1'
@@ -708,15 +717,20 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             do_build: bool = False) -> str:
         """Wrapper function to make the simulation ICs."""
         #First generate the input files for CAMB
+        print("Making simulation submission files,", datetime.datetime.now(), "\n")
+        print("Generating the input file for CAMB...\n")
         camb_output = self.cambfile()
 
         #Then run CAMB
+        print("Running CAMB...\n")
         self.camb_git = classylss.__version__
 
         #Change the power spectrum file on disc if we want to do that
+        print("Changing the power spectrum file on disc...\n")
         self._alter_power(os.path.join(self.outdir,camb_output))
 
         #Now generate the GenIC parameters
+        print("Generating the GenIC parameters...\n")
         (genic_output, genic_param) = self.genicfile(camb_output)
 
         #Save a json of ourselves.
@@ -725,14 +739,18 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Check that the ICs have the right power spectrum
         #Generate Gadget makefile
+        print("Generating Gadget makefile...\n")
         gadget_config = self.gadget3config()
 
         #Symlink the new gadget config to the source directory
         #Generate Gadget parameter file
+        print("Generating Gadget parameter file...\n")
         self.gadget3params(genic_output)
 
         #Generate mpi_submit file
+        print("Generate mpi_submit file...\n")
         self.generate_mpi_submit(genic_output)
+        
 
         #Run MP-GenIC
         #Compile from source; usually not need
@@ -750,6 +768,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             self.do_gadget_build(gadget_config)
 
         return gadget_config
+        print("Done.", datetime.datetime.now())
 
 def save_transfer(transfer: np.ndarray, transferfile: str) -> None:
     """

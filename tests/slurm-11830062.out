@@ -1,0 +1,36 @@
+/rhome/yyang440/anaconda3/envs/nbodykit-env/bin/python
+Current date and time: 2023-07-06 11:10:01
+/rhome/yyang440/anaconda3/envs/nbodykit-env/lib/python3.8/site-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.16.5 and <1.23.0 is required for this version of SciPy (detected version 1.24.3
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+Done. 2023-07-06 11:10:04.176846
+__init__: initializing parameters... 2023-07-06 11:10:04.176913
+Warning:  /bigdata/birdlab/yyang440/test_sims/test-128-256-Neff-0000  is non-empty
+__init__: done. 2023-07-06 11:10:04.200360 
+
+Making simulation submission files, 2023-07-06 11:10:04.200401 
+
+Generating the input file for CAMB...
+
+cambfile: loading defaults... 2023-07-06 11:10:04.200410
+cambfile: setting up massive neutrinos...
+cambfile: generating the powerspec object...
+cambfile: getting and saving the transfer functions...
+cambfile: done. 2023-07-06 12:08:42.652224 
+
+Running CAMB...
+
+Changing the power spectrum file on disc...
+
+Generating the GenIC parameters...
+
+Generating Gadget makefile...
+
+Generating Gadget parameter file...
+
+Generate mpi_submit file...
+
+nproc = 256
+nodes = 8
+nproc = 256
+nodes = 8
+Current date and time: 2023-07-06 12:08:42
