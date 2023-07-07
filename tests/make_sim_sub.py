@@ -54,6 +54,7 @@ cores = args.cores # Number of cores per node
 m_nu = .1 # total neutrino mass
 w0_fld = -1.1
 wa_fld = .2
+alpha_s = .1 # Running of the spectral index
 N_ur = 3.5
 MWDM_therm = 1.
 
@@ -76,7 +77,7 @@ Sim = simulationics.SimulationICs(
     box    = box, npart = npart,
     hubble = hubble, omega0 = omega0,
     omegab = omegab, scalar_amp = scalar_amp, ns = ns,
-    w0_fld=w0_fld, wa_fld=wa_fld, m_nu=m_nu, N_ur=N_ur, MWDM_therm=MWDM_therm,
+    w0_fld=w0_fld, wa_fld=wa_fld, m_nu=m_nu, N_ur=N_ur, alpha_s=alpha_s, MWDM_therm=MWDM_therm,
     nproc  = nproc, cores=cores,
     outdir = outdir,
     gadget_dir = gadget_dir,

@@ -1,10 +1,8 @@
 '''
-Create a dm-only simulation filefolder, for multi-fidelity tests.
-making resolution and boxsize as two major hyperparameters,
-making outher cosmological parameters as another input dict.
+make submission files for submission file generator for simulations
+command: python make_gen_sub.py --json_file=matterLatin_high.json --box=256 --npart=128 --nproc=256 --cores=32 --py_script=make_sim_sub.py --submit_base=gen --gadget_dir=~/bigdata/codes/MP-Gadget/ --cluster_class=clusters.BIOClass
 '''
-from typing import Generator, Type, Optional
-import os
+from typing import Generator
 import argparse
 import json
 # from SimulationRunner import simulationics, clusters
@@ -37,12 +35,11 @@ def write_gen_submit(index: int, box: int,   npart: int,
         gadget_dir: str = "~/bigdata/codes/MP-Gadget/",
         python:     str = "python", # it's annoying
         py_script:  str = "make_sim_sub.py",
-        cluster_class: str = "clusters.BIOClass",
-        test: bool = False):
-    with open(submit_base + "_{}.submit".format(str(i).zfill(4)), "w") as f:
+        cluster_class: str = "clusters.BIOClass"):
+    with open(submit_base + "_{}.submit".format(str(index).zfill(4)), "w") as f:
         f.write("#!/bin/bash\n")
         f.write("#SBATCH --partition=short\n")    
-        f.write("#SBATCH --job-name={}\n".format(outdir[-19:]))   
+        f.write("#SBATCH --job-name={}\n".format(outdir[-6:]))   
         f.write("#SBATCH --time=2:0:00\n") 
         f.write("#SBATCH --nodes=1\n")
         f.write("#SBATCH --ntasks-per-node=1\n")
@@ -55,8 +52,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("echo \"Current date and time: $current_datetime\"\n")
         f.write("python {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --nproc={} --cores={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns),str(nproc),str(cores), outdir, gadget_dir, python, cluster_class))
         f.write("current_datetime=$(date \"+%Y-%m-%d %H:%M:%S\")\n")
-        f.write("echo \"Current date and time: $current_datetime\"\n")
-    f.close()            
+        f.write("echo \"Current date and time: $current_datetime\"\n")           
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -89,10 +85,9 @@ if __name__ == "__main__":
 
     with open(args.json_file, 'r') as f:
         Latin_dict = json.load(f)
-    f.close()
 
     # handle the param file generation one-by-one
-    for i,param_dict in enumerate(take_params_dict(Latin_dict)):
+    for i, param_dict in enumerate(take_params_dict(Latin_dict)):
         # outdir auto generated, since we will have many folders
         outdir = "~/bigdata/test_sims/test_Part{}_Box{}_{}".format(
             args.npart, args.box, str(i).zfill(4))
