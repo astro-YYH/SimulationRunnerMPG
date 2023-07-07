@@ -84,4 +84,5 @@ Sim = simulationics.SimulationICs(
     cluster_class = cluster_class)
 
 Sim.make_simulation(pkaccuracy=0.07)
+outdir = os.path.expanduser(outdir)
 assert os.path.exists(outdir)
