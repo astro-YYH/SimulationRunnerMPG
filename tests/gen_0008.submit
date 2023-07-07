@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --partition=short
+#SBATCH --job-name=Part128_Box256_0008
+#SBATCH --time=2:0:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=6G
+# SBATCH --mail-type=end
+# SBATCH --mail-user=yyang440@ucr.edu
+
+which python
+current_datetime=$(date "+%Y-%m-%d %H:%M:%S")
+echo "Current date and time: $current_datetime"
+python make_sim_sub.py --box=256 --npart=128 --hubble=0.7150000000000001 --omega0=0.27 --omegab=0.0478 --scalar_amp=2.475e-09 --ns=0.9135 --nproc=256 --cores=32 --outdir=~/bigdata/test_sims/test_Part128_Box256_0008 --gadget_dir=~/bigdata/MP-Gadget/ --python=python --cluster_class=clusters.BIOClass
+current_datetime=$(date "+%Y-%m-%d %H:%M:%S")
+echo "Current date and time: $current_datetime"

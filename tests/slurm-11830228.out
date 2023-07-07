@@ -1,2 +1,3 @@
 /rhome/yyang440/anaconda3/envs/nbodykit-env/bin/python
 Current date and time: 2023-07-06 15:51:54
+slurmstepd-c10: error: *** JOB 11830228 ON c10 CANCELLED AT 2023-07-06T17:52:14 DUE TO TIME LIMIT ***
