@@ -1,6 +1,9 @@
 '''
 make submission files for submission file generator for simulations
-command: python make_gen_sub.py --json_file=matterLatin_high.json --box=256 --npart=128 --nproc=256 --cores=32 --py_script=make_sim_sub.py --submit_base=gen --gadget_dir=~/bigdata/codes/MP-Gadget/ --cluster_class=clusters.BIOClass
+command: python make_gen_sub.py --json_file=matterLatin_11p_90x3.json
+--box=256 --npart=128 --nproc=256 --cores=32 --py_script=make_sim_sub.py
+--submit_base=gen --gadget_dir=~/bigdata/codes/MP-Gadget/
+--cluster_class=clusters.BIOClass --outdir_base=~/bigdata/test_sims/cosmo_11p
 '''
 from typing import Generator
 import argparse
@@ -32,7 +35,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         nproc :     int,   cores: int,
         outdir:     str = "data",
         submit_base: str = "gen",
-        gadget_dir: str = "~/bigdata/codes/MP-Gadget/",
+        gadget_dir: str = "~/bigdata/MP-Gadget3/",
         python:     str = "python", # it's annoying
         py_script:  str = "make_sim_sub.py",
         cluster_class: str = "clusters.BIOClass"):
@@ -63,9 +66,10 @@ if __name__ == "__main__":
     parser.add_argument("--json_file", type=str, default="matterLatin_high.json")
     
     parser.add_argument("--gadget_dir", type=str,
-        default="~/bigdata/MP-Gadget/")
+        default="~/bigdata/MP-Gadget3/")
     parser.add_argument("--cluster_class", type=str,
         default="clusters.BIOClass")
+    parser.add_argument("--outdir_base", type=str, default="~/bigdata/test_sims/cosmo_11p")
 
     # keep a separated flags for boxsize and resolution
     parser.add_argument("--box", type=int, default=256)
@@ -89,8 +93,7 @@ if __name__ == "__main__":
     # handle the param file generation one-by-one
     for i, param_dict in enumerate(take_params_dict(Latin_dict)):
         # outdir auto generated, since we will have many folders
-        outdir = "~/bigdata/test_sims/test_Part{}_Box{}_{}".format(
-            args.npart, args.box, str(i).zfill(4))
+        outdir = "{}_Part{}_Box{}_{}".format(args.outdir_base, args.npart, args.box, str(i).zfill(4))
 
         write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores,
             outdir=outdir, gadget_dir=args.gadget_dir,
