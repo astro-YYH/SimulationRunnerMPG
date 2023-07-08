@@ -110,6 +110,35 @@ class ClusterClass:
 
         return
 
+    def generate_mpi_submit_one(
+            self, outdir: str, extracommand: Union[str, Any] = None,
+            return_str: bool = False) -> Any:
+        """Generate a sample mpi_submit file for MP-GenIC.
+        The prefix argument is a string at the start of each line.
+        It separates queueing system directives from normal comments"""
+        name: str = os.path.basename(os.path.normpath(outdir))
+
+        if return_str:
+            mpis  = "#!/bin/bash\n"
+            mpis += self._queue_directive(name, timelimit=0.5, nproc=self.nproc)
+            mpis += self._mpi_program(command=self.genicexe+" "+self.genicparam)
+
+            if extracommand is not None:
+                mpis += extracommand + "\n"
+
+            return mpis
+
+        with open(os.path.join(outdir, "mpi_submit_genic"),'w') as mpis:
+            mpis.write("#!/bin/bash\n")
+            mpis.write(self._queue_directive(name, timelimit=0.5, nproc=self.nproc))
+            mpis.write(self._mpi_program(command=self.genicexe+" "+self.genicparam))
+            mpis.write(self._mpi_program(command="{} {}".format(
+                    self.gadgetexe, self.gadgetparam)))
+            if extracommand is not None:
+                mpis.write(extracommand+"\n")
+
+        return
+
     def _mpi_program(self, command: str) -> str:
         """String for MPI program to execute"""
         qstring = "mpirun -np {} {}\n".format(str(self.nproc), command)
