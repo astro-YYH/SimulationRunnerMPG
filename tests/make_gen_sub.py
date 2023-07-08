@@ -50,6 +50,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("#SBATCH --mem=6G\n")
         f.write("# SBATCH --mail-type=end\n")
         f.write("# SBATCH --mail-user=yyang440@ucr.edu\n\n")
+        f.write("#SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47,c48\n")
         f.write("which python\n")
         f.write("current_datetime=$(date \"+%Y-%m-%d %H:%M:%S\")\n")
         f.write("echo \"Current date and time: $current_datetime\"\n")
