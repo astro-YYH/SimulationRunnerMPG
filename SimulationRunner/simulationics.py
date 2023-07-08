@@ -721,20 +721,20 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             do_build: bool = False) -> str:
         """Wrapper function to make the simulation ICs."""
         #First generate the input files for CAMB
-        print("Making simulation submission files,", datetime.datetime.now(), "\n")
-        print("Generating the input file for CAMB...\n")
+        print("Making simulation submission files,", datetime.datetime.now())
+        print("Make simulation: generating the input file for CAMB...")
         camb_output = self.cambfile()
 
         #Then run CAMB
-        print("Running CAMB...\n")
+        print("Make simulation: running CAMB...")
         self.camb_git = classylss.__version__
 
         #Change the power spectrum file on disc if we want to do that
-        print("Changing the power spectrum file on disc...\n")
+        print("Make simulation: changing the power spectrum file on disc...")
         self._alter_power(os.path.join(self.outdir,camb_output))
 
         #Now generate the GenIC parameters
-        print("Generating the GenIC parameters...\n")
+        print("Make simulation: generating the GenIC parameters...")
         (genic_output, genic_param) = self.genicfile(camb_output)
 
         #Save a json of ourselves.
@@ -743,16 +743,16 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Check that the ICs have the right power spectrum
         #Generate Gadget makefile
-        print("Generating Gadget makefile...\n")
+        print("Make simulation: generating Gadget makefile...")
         gadget_config = self.gadget3config()
 
         #Symlink the new gadget config to the source directory
         #Generate Gadget parameter file
-        print("Generating Gadget parameter file...\n")
+        print("Make simulation: generating Gadget parameter file...")
         self.gadget3params(genic_output)
 
         #Generate mpi_submit file
-        print("Generate mpi_submit file...\n")
+        print("Make simulation: generate mpi_submit file...")
         self.generate_mpi_submit(genic_output)
         
 
@@ -770,9 +770,9 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
                 m_nu=self.m_nu, outdir=self.outdir, accuracy=pkaccuracy)
 
             self.do_gadget_build(gadget_config)
-
+        print("Make simulation: done.", datetime.datetime.now())
         return gadget_config
-        print("Done.", datetime.datetime.now())
+        
 
 def save_transfer(transfer: np.ndarray, transferfile: str) -> None:
     """
