@@ -67,7 +67,7 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'degenerate', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04, alpha_s: float = 0, MWDM_therm: float = 0,        
+            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04, alpha_s: float = 0, MWDM_therm: float = 0,      
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
@@ -117,6 +117,10 @@ class SimulationICs(object):
         assert alpha_s < 1 and alpha_s > -1
         self.alpha_s = alpha_s
 
+        T_CMB = 2.7255  # default cmb temperature
+        omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
+        self.omega_ur = omegag * (1 + 0.22710731766023898 * self.N_ur) 
+        assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
         self.MWDM_therm = MWDM_therm
@@ -422,6 +426,8 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config["w0_fld"]      = self.w0_fld
         config["wa_fld"]      = self.wa_fld
         config["MWDM_therm"]  = self.MWDM_therm
+
+        config["Omega_ur"]    = self.omega_ur
         
         zstr = self._camb_zstr(self.redshift)
         config['FileWithInputSpectrum']    = camb_output + "ics_matterpow_"+ zstr + ".dat"
@@ -582,9 +588,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config["w0_fld"]      = self.w0_fld
         config["wa_fld"]      = self.wa_fld
 
-        T_CMB = 2.7255
-        omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
-        config["Omega_ur"]    = omegag * (1 + 0.22710731766023898 * self.N_ur) 
+        config["Omega_ur"]    = self.omega_ur
 
         #OmegaBaryon should be zero for gadget if we don't have gas particles
         config['OmegaBaryon'] = self.omegab * False # self.separate_gas; 
