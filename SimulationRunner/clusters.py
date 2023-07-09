@@ -57,7 +57,7 @@ class ClusterClass:
         return_str (bool) : do not write file but return a string of submission 
             file, I prefer to see the string before I write into file
         """
-        name = os.path.basename(os.path.normpath(outdir))
+        name = os.path.basename(os.path.normpath(outdir))[-8:]
 
         if return_str:
             print_str  = "#!/bin/bash\n" 
@@ -369,7 +369,7 @@ class BIOClass(ClusterClass):
         """Generate a sample spectra_submit file, which generates artificial 
         spectra. The prefix argument is a string at the start of each line.
         It separates queueing system directives from normal comments"""
-        name = os.path.basename(os.path.normpath(outdir))
+        name = os.path.basename(os.path.normpath(outdir))[-8:]
 
         with open(os.path.join(outdir, "spectra_submit"),'w') as mpis:
             mpis.write("#!/bin/bash\n")
@@ -427,7 +427,7 @@ class StampedeClass(ClusterClass):
         """Generate a sample spectra_submit file, which generates artificial 
         spectra. The prefix argument is a string at the start of each line.
         It separates queueing system directives from normal comments"""
-        name = os.path.basename(os.path.normpath(outdir))
+        name = os.path.basename(os.path.normpath(outdir))[-8:]
 
         with open(os.path.join(outdir, "spectra_submit"),'w') as mpis:
             mpis.write("#!/bin/bash\n")
