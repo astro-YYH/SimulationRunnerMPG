@@ -68,9 +68,9 @@ python = args.python # Your path to python binary
 # BIOClass class :)
 print("Creating cluster_calss...", current_time)
 cluster_class = eval(args.cluster_class)
-print("Done.", current_time)
+print("Done.", current_time,"\n")
 
-print("Output folder: ", outdir)
+print("Output directory: ", outdir,"\n")
 
 Sim = simulationics.SimulationICs(
     redshift = 99, redend = 0,

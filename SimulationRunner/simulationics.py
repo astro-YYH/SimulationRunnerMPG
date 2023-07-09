@@ -771,7 +771,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
                 m_nu=self.m_nu, outdir=self.outdir, accuracy=pkaccuracy)
 
             self.do_gadget_build(gadget_config)
-        print("Make simulation: done.", datetime.datetime.now())
+        print("Make simulation: done.", datetime.datetime.now(),"\n")
         return gadget_config
         
 
