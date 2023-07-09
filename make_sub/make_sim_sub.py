@@ -59,12 +59,12 @@ ns = args.ns # Scalar spectral index
 nproc = args.nproc # Total number of processors
 cores = args.cores # Number of cores per node
 
-m_nu = mnu # total neutrino mass
-w0_fld = w0
-wa_fld = wa
-alpha_s = alphas # Running of the spectral index
-N_ur = Neff
-MWDM_therm = MWDM
+m_nu = args.mnu # total neutrino mass
+w0_fld = args.w0
+wa_fld = args.wa
+alpha_s = args.alphas # Running of the spectral index
+N_ur = args.Neff
+MWDM_therm = args.MWDM
 
 # set the paths
 outdir = args.outdir # Output folder name

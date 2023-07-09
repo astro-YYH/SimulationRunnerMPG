@@ -22,7 +22,7 @@ class ClusterClass:
         self.nproc        = nproc
         self.cores        = cores
         self.email        = "yyang440@ucr.edu"
-        self.timelimit    = timelimit
+        self.timelimit    = timelimit  # in hours
         self.cluster_name = cluster_name
 
         self.gadget_dir   = os.path.expanduser(gadget_dir)
@@ -116,11 +116,11 @@ class ClusterClass:
         """Generate a sample mpi_submit file for MP-GenIC.
         The prefix argument is a string at the start of each line.
         It separates queueing system directives from normal comments"""
-        name: str = os.path.basename(os.path.normpath(outdir))
+        name: str = os.path.basename(os.path.normpath(outdir))[-8:]
 
         if return_str:
             mpis  = "#!/bin/bash\n"
-            mpis += self._queue_directive(name, timelimit=0.5, nproc=self.nproc)
+            mpis += self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc)
             mpis += self._mpi_program(command=self.genicexe+" "+self.genicparam)
 
             if extracommand is not None:
@@ -130,7 +130,7 @@ class ClusterClass:
 
         with open(os.path.join(outdir, "mpi_submit_one"),'w') as mpis:
             mpis.write("#!/bin/bash\n")
-            mpis.write(self._queue_directive(name, timelimit=0.5, nproc=self.nproc))
+            mpis.write(self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc))
             mpis.write(self._mpi_program(command=self.genicexe+" "+self.genicparam))
             # mpis.write(self._mpi_program(command="{} {}".format(
                   #  self.gadgetexe, self.gadgetparam)))

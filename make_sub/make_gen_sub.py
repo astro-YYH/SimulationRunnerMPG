@@ -1,6 +1,6 @@
 '''
 make submission files for submission file generator for simulations
-command: python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75 --nproc=256 --cores=32 --py_script=make_sim_sub.py --gadget_dir=~/bigdata/codes/MP-Gadget3/ --cluster_class=clusters.BIOClass --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/L1/cosmo_11p
+command: python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75 --nproc=256 --cores=32 --py_script=make_sim_sub.py --gadget_dir=~/bigdata/codes/MP-Gadget3/ --cluster_class=clusters.BIOClass --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
 '''
 from typing import Generator
 import argparse
