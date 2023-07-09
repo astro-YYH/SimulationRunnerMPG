@@ -1,8 +1,0 @@
-/rhome/yyang440/anaconda3/envs/nbodykit-env/bin/python
-Current date and time: 2023-07-06 15:49:47
-Importing simulationics, clusters... 2023-07-06 15:49:47.774304
-Traceback (most recent call last):
-  File "single_test_WDM.py", line 6, in <module>
-    from SimulationRunner import simulationics, clusters
-ModuleNotFoundError: No module named 'SimulationRunner'
-Current date and time: 2023-07-06 15:49:47
