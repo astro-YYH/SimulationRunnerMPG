@@ -700,13 +700,14 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         The prefix argument is a string at the start of each line.
         It separates queueing system directives from normal comments"""
         # self._cluster.generate_mpi_submit(self.outdir)
-        self._cluster.generate_mpi_submit_one(self.outdir)
+        
 
         #Generate an mpi_submit for genic
         zstr = self._camb_zstr(self.redshift)
         check_ics = "{} cambpower.py {} --czstr {} --mnu {}".format(
             self.python, genicout, zstr, str(self.m_nu))
 
+        self._cluster.generate_mpi_submit_one(self.outdir, extracommand=check_ics)
         # if return_str:
             # return self._cluster.generate_mpi_submit_genic(
                 # self.outdir, extracommand=check_ics)
