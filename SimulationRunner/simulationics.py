@@ -65,7 +65,7 @@ class SimulationICs(object):
             omegab:        float = 0.0472,       hubble:   float = 0.7,
             scalar_amp:    float = 2.427e-9,     ns:       float = 0.97,
             rscatter:      bool  = False,        m_nu:     float = 0,
-            nu_hierarchy:  str   = 'degenerate', uvb:      str   = "pu",
+            nu_hierarchy:  str   = 'normal', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
             w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04, alpha_s: float = 0, MWDM_therm: float = 0,      
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 

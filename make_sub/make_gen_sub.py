@@ -49,12 +49,11 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("# SBATCH --mail-type=end\n")
         f.write("# SBATCH --mail-user=yyang440@ucr.edu\n")
         f.write("#SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
+        f.write("hostname\n")
         f.write("which python\n")
-        f.write("current_datetime=$(date \"+%Y-%m-%d %H:%M:%S\")\n")
-        f.write("echo \"Current date and time: $current_datetime\"\n")
+        f.write("date\n")
         f.write("python {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), outdir, gadget_dir, python, cluster_class))
-        f.write("current_datetime=$(date \"+%Y-%m-%d %H:%M:%S\")\n")
-        f.write("echo \"Current date and time: $current_datetime\"\n")           
+        f.write("date\n")           
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -92,7 +91,7 @@ if __name__ == "__main__":
     # handle the param file generation one-by-one
     for i, param_dict in enumerate(take_params_dict(Latin_dict)):
         # outdir auto generated, since we will have many folders
-        outdir = "{}_Part{}_Box{}_{}".format(args.outdir_base, args.npart, args.box, str(i).zfill(4))
+        outdir = "{}_Box{}_Part{}_{}".format(args.outdir_base, args.box, args.npart, str(i).zfill(4))
 
         write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores,
             outdir=outdir, gadget_dir=args.gadget_dir,

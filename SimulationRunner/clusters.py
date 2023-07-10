@@ -131,12 +131,15 @@ class ClusterClass:
         with open(os.path.join(outdir, "mpi_submit_one"),'w') as mpis:
             mpis.write("#!/bin/bash\n")
             mpis.write(self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc))
+            mpis.write("hostname\n")
+            mpis.write("date\n")
             mpis.write(self._mpi_program(command=self.genicexe+" "+self.genicparam))
             # mpis.write(self._mpi_program(command="{} {}".format(
                   #  self.gadgetexe, self.gadgetparam)))
             mpis.write("mpirun {} {}\n".format(self.gadgetexe, self.gadgetparam))
             if extracommand is not None:
                 mpis.write(extracommand+"\n")
+            mpis.write("date\n")
 
         return
 
