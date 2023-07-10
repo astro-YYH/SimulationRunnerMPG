@@ -1,6 +1,6 @@
 '''
 make submission files for submission file generator for simulations
-command: python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75 --nproc=64 --cores=32 --py_script=make_sim_sub.py --gadget_dir=~/bigdata/MP-Gadget3/ --cluster_class=clusters.BIOClass --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
+command: python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75 --nproc=256 --cores=32 --py_script=make_sim_sub.py --gadget_dir=~/bigdata/MP-Gadget3/ --cluster_class=clusters.BIOClass --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
 '''
 from typing import Generator
 import argparse
@@ -40,7 +40,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
     with open("gen_Box{}_Part{}_{}.submit".format(box, npart, str(index).zfill(4)), "w") as f:
         f.write("#!/bin/bash\n")
         f.write("#SBATCH --partition=short\n")    
-        f.write("#SBATCH --job-name={}\n".format(outdir[-6:]))   
+        f.write("#SBATCH --job-name={}\n".format(outdir[-8:]))   
         f.write("#SBATCH --time=2:0:00\n") 
         f.write("#SBATCH --nodes=1\n")
         f.write("#SBATCH --ntasks-per-node=1\n")
@@ -48,7 +48,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("#SBATCH --mem=6G\n")
         f.write("# SBATCH --mail-type=end\n")
         f.write("# SBATCH --mail-user=yyang440@ucr.edu\n")
-        f.write("#SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47,c48\n\n")
+        f.write("#SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
         f.write("which python\n")
         f.write("current_datetime=$(date \"+%Y-%m-%d %H:%M:%S\")\n")
         f.write("echo \"Current date and time: $current_datetime\"\n")
