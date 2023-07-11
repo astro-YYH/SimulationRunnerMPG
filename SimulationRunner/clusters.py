@@ -4,6 +4,7 @@ different clusters
 """
 from typing import List, Union, Any, TextIO
 import os.path
+import math
 
 class ClusterClass:
     """
@@ -12,8 +13,8 @@ class ClusterClass:
     def __init__(self, gadget: str = "MP-Gadget", genic: str = "MP-GenIC", 
             param: str = "mpgadget.param", 
             genicparam: str = "_genic_params.ini", 
-            nproc: int = 256, cores: int = 16,
-            timelimit: Union[float, int] = 24, cluster_name: str = "Template",
+            nproc: int = 256, cores: int = 16, mpi_ranks: int = 8, threads: int = 16,
+            timelimit: Union[float, int] = 24, cluster_name: str = "Template", 
             gadget_dir: str = "~/bigdata/code/MP-Gadget/") -> None:
         """
         CPU parameters (walltime, number of cpus, etc):
@@ -130,10 +131,10 @@ class ClusterClass:
 
         with open(os.path.join(outdir, "mpi_submit_one"),'w') as mpis:
             mpis.write("#!/bin/bash\n")
-            mpis.write(self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc))
+            mpis.write(self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc), mpi_ranks=self.mpi_ranks)
             mpis.write("hostname\n")
             mpis.write("date\n")
-            mpis.write(self._mpi_program(command=self.genicexe+" "+self.genicparam))
+            mpis.write(self._mpi_program(command=self.genicexe+" "+self.genicparam, threads=self.threads))
             # mpis.write(self._mpi_program(command="{} {}".format(
                   #  self.gadgetexe, self.gadgetparam)))
             mpis.write("mpirun {} {}\n".format(self.gadgetexe, self.gadgetparam))
@@ -292,24 +293,25 @@ class BIOClass(ClusterClass):
         self.memory : int = memory
 
     def _queue_directive(self, name: Union[str, TextIO],
-            timelimit: Union[float, int], nproc: int = 8, cores: int = 32,
+            timelimit: Union[float, int], nproc: int = 8, cores: int = 32, mpi_ranks: int = 8,
             prefix: str = "#SBATCH") -> str:
         """Generate mpi_submit with coma specific parts"""
         _ = timelimit
 
+        nodes = math.ceil(nproc/cores)
         # SBATCH descriptions
         qstring =  prefix + " --partition=short\n"
         qstring += prefix + " --job-name={}\n".format(name)
         qstring += prefix + " --time={}\n".format(self.timestring(timelimit))
-        qstring += prefix + " --nodes={}\n".format(str(int(nproc/cores)))
+        qstring += prefix + " --nodes={}\n".format(str(nodes))
         # print("nproc = {}".format(str(int(nproc))))
         # print("nodes = {}".format(str(int(nproc/cores))))
 
         #Number of tasks (processes) per node
-        qstring += prefix + " --ntasks-per-node=2\n"
+        qstring += prefix + " --ntasks-per-node={}\n".format(str(int(mpi_ranks/nodes)))
 
         #Number of cpus (threads) per task (process)
-        qstring += prefix + " --cpus-per-task=16\n"
+        qstring += prefix + " --cpus-per-task={}\n".format(str(int(nproc/mpi_ranks)))
 
         # # exclusive, request a full node
         # qstring += prefix + " --exclusive\n"
@@ -325,10 +327,10 @@ class BIOClass(ClusterClass):
 
         return qstring
 
-    def _mpi_program(self, command: str) -> str:
+    def _mpi_program(self, command: str, threads: int = 16,) -> str:
         """String for MPI program to execute."""
         #Change to current directory
-        qstring = "export OMP_NUM_THREADS=32\n"
+        qstring = "export OMP_NUM_THREADS={}\n".format(str(int(threads)))
 
         qstring += self.slurm_modules()
 

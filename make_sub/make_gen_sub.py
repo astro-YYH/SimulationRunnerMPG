@@ -1,6 +1,11 @@
 '''
 make submission files for submission file generator for simulations
-command: python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75 --nproc=256 --cores=32 --py_script=make_sim_sub.py --gadget_dir=~/bigdata/MP-Gadget3/ --cluster_class=clusters.BIOClass --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
+command: python make_gen_sub.py
+--json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75
+--nproc=16 --cores=32 --mpi_ranks=8 --threads=16
+--py_script=make_sim_sub.py --gadget_dir=~/bigdata/MP-Gadget3/
+--cluster_class=clusters.BIOClass
+--outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
 '''
 from typing import Generator
 import argparse
@@ -31,7 +36,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         scalar_amp: float, ns:     float, w0:     float,
         wa:         float, mnu:    float, Neff:   float,
         alphas:     float, MWDM:   float,
-        nproc :     int,   cores: int,
+        nproc :     int,   cores: int, mpi_ranks: int, threads: int,
         outdir:     str = "data",
         gadget_dir: str = "~/bigdata/MP-Gadget3/",
         python:     str = "python", # it's annoying
@@ -52,7 +57,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("hostname\n")
         f.write("which python\n")
         f.write("date\n")
-        f.write("python {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), outdir, gadget_dir, python, cluster_class))
+        f.write("python {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
         f.write("date\n")           
 
 if __name__ == "__main__":
@@ -76,6 +81,9 @@ if __name__ == "__main__":
     # mpi settings
     parser.add_argument("--nproc", type=int, default=256)
     parser.add_argument("--cores", type=int, default=32)
+    parser.add_argument("--mpi_ranks", type=int, default=8)
+    parser.add_argument("--threads", type=int, default=16)
+    
     parser.add_argument("--py_script", type=str, default="make_sim_sub.py")
     parser.add_argument("--submit_base", type=str, default="gen")
 
@@ -93,7 +101,7 @@ if __name__ == "__main__":
         # outdir auto generated, since we will have many folders
         outdir = "{}_Box{}_Part{}_{}".format(args.outdir_base, args.box, args.npart, str(i).zfill(4))
 
-        write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores,
+        write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores, mpi_ranks=args.mpi_ranks, threads=args.threads,
             outdir=outdir, gadget_dir=args.gadget_dir,
             cluster_class=cc,
             **param_dict)

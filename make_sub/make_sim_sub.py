@@ -21,6 +21,8 @@ if __name__ == "__main__":
     # mpi settings
     parser.add_argument("--nproc", type=int, default=256)
     parser.add_argument("--cores", type=int, default=32)
+    parser.add_argument("--mpi_ranks", type=int, default=8)
+    parser.add_argument("--threads", type=int, default=16)
 
     # comological params
     parser.add_argument("--omega0", type=float, default=.288)
