@@ -22,6 +22,8 @@ class ClusterClass:
         machine-specific decorator."""
         self.nproc        = nproc
         self.cores        = cores
+        self.mpi_ranks    = mpi_ranks
+        self.threads      = threads
         self.email        = "yyang440@ucr.edu"
         self.timelimit    = timelimit  # in hours
         self.cluster_name = cluster_name
@@ -34,6 +36,7 @@ class ClusterClass:
         self.gadgetparam = param
         self.genicexe    = os.path.join( self.gadget_dir, 'genic', genic   )
         self.genicparam  = genicparam
+
 
     def __repr__(self) -> str:
         '''
@@ -131,7 +134,7 @@ class ClusterClass:
 
         with open(os.path.join(outdir, "mpi_submit_one"),'w') as mpis:
             mpis.write("#!/bin/bash\n")
-            mpis.write(self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc), mpi_ranks=self.mpi_ranks)
+            mpis.write(self._queue_directive(name, timelimit=self.timelimit, nproc=self.nproc, mpi_ranks=self.mpi_ranks))
             mpis.write("hostname\n")
             mpis.write("date\n")
             mpis.write(self._mpi_program(command=self.genicexe+" "+self.genicparam, threads=self.threads))
@@ -283,13 +286,15 @@ class BIOClass(ClusterClass):
     Starting from new HPCC (since March 2022), we can use the threading to speed
     up the computation.
     """
-    def __init__(self, *args, nproc: int = 8, timelimit: Union[float, int] = 2, # nproc: int = 8 does not seem to work, it is still 256 (ClusterClass default)
+    def __init__(self, *args, nproc: int = 8, timelimit: Union[float, int] = 2, 
             cluster_name: str = "BIOCluster", 
-            cores: int = 2, memory: int = 115, **kwargs) -> None:
+            cores: int = 2, mpi_ranks: int = 8, threads: int = 16, memory: int = 115, **kwargs) -> None:
+        # nproc: int = 8 does not seem to work, it is still 256
+        # (ClusterClass default)
         
         super().__init__(*args, nproc=nproc, timelimit=timelimit,
-            cluster_name=cluster_name, cores=cores, **kwargs)
-        
+            cluster_name=cluster_name, cores=cores, mpi_ranks=mpi_ranks, threads=threads, **kwargs)
+        self.mpi_ranks = mpi_ranks 
         self.memory : int = memory
 
     def _queue_directive(self, name: Union[str, TextIO],

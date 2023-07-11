@@ -60,6 +60,8 @@ ns = args.ns # Scalar spectral index
 
 nproc = args.nproc # Total number of processors
 cores = args.cores # Number of cores per node
+mpi_ranks = args.mpi_ranks
+threads = args.threads
 
 m_nu = args.mnu # total neutrino mass
 w0_fld = args.w0
@@ -88,7 +90,7 @@ Sim = simulationics.SimulationICs(
     hubble = hubble, omega0 = omega0,
     omegab = omegab, scalar_amp = scalar_amp, ns = ns,
     w0_fld=w0_fld, wa_fld=wa_fld, m_nu=m_nu, N_ur=N_ur, alpha_s=alpha_s, MWDM_therm=MWDM_therm,
-    nproc  = nproc, cores=cores,
+    nproc  = nproc, cores=cores, mpi_ranks=mpi_ranks, threads=threads,
     outdir = outdir,
     gadget_dir = gadget_dir,
     python = python,

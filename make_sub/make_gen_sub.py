@@ -6,6 +6,13 @@ command: python make_gen_sub.py
 --py_script=make_sim_sub.py --gadget_dir=~/bigdata/MP-Gadget3/
 --cluster_class=clusters.BIOClass
 --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
+
+python make_gen_sub.py
+--json_file=../latin_design/matterLatin_11p_90x3.json --box=100 --npart=75
+--nproc=16 --cores=32 --mpi_ranks=8 --threads=16
+--py_script=make_sim_sub.py --gadget_dir=~/bigdata/MP-Gadget3/
+--cluster_class=clusters.BIOClass
+--outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
 '''
 from typing import Generator
 import argparse

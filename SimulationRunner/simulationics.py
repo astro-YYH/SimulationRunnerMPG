@@ -71,7 +71,7 @@ class SimulationICs(object):
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
-            nproc:         int = 256,            cores:    int   = 32) -> None:
+            nproc:         int = 256,            cores:    int   = 32, mpi_ranks: int = 8, threads: int = 16) -> None:
         #Check that input is reasonable and set parameters
         #In Mpc/h
         print("__init__: initializing parameters...", datetime.datetime.now())
