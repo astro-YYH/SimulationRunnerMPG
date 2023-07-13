@@ -12,7 +12,7 @@ matter = MatterDesign(
     mnu_bounds=(0., 0.3),
     Neff_bounds=(3.046, 4.5),
     alphas_bounds=(-.03, .03),
-    MWDM_bounds=(0, 40)
+    MWDM_bounds=(2, 40)
 )
 
 # number of samples
