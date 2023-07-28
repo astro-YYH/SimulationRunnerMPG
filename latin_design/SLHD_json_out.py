@@ -8,11 +8,11 @@ matter = MatterDesign(
     scalar_amp_bounds=(1.7*1e-9, 2.5*1e-9), 
     ns_bounds=(0.92, 1.0),
     w0_bounds=(-1.3, -0.7),
-    wa_bounds=(-0.7, 0.7),
-    mnu_bounds=(0., 0.3),
+    wa_bounds=(-0.5, 0.5),
+    mnu_bounds=(0.06, 0.3),
     Neff_bounds=(3.046, 4.5),
     alphas_bounds=(-.03, .03),
-    MWDM_bounds=(2, 40)
+    MWDM_bounds=(0, 40)
 )
 
 # number of samples

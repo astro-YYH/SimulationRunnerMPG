@@ -119,7 +119,7 @@ class SimulationICs(object):
 
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
-        self.omega_ur = omegag * (1 + 0.22710731766023898 * self.N_ur) 
+        self.omega_ur = omegag * 0.22710731766023898 * self.N_ur
         assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
@@ -165,7 +165,7 @@ class SimulationICs(object):
             gadget = self.gadgetexe, param      = self.gadgetparam, 
             genic  = self.genicexe,  genicparam = self.genicout, 
             nproc  = nproc,          cores      = cores,
-            gadget_dir = gadget_dir)                     # add nproc and cores
+            gadget_dir = gadget_dir, mpi_ranks = mpi_ranks, threads = threads)                     # add nproc and cores
                                                          # make them optional
         assert self._cluster.gadget_dir == os.path.expanduser(gadget_dir)
 
@@ -276,7 +276,18 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             'Omega_k': 0, 'n_s': self.ns, 'A_s': self.scalar_amp, 'alpha_s': self.alpha_s}
 
         #Lambda is computed self-consistently
-        gparams['Omega_fld'] = 1 - self.omega0
+        if self.w0_fld != -1.0 or self.wa_fld != 0.:
+            gparams['Omega_fld'] = 1 - self.omega0
+            gparams['w0_fld'] = self.w0_fld 
+            gparams['wa_fld'] = self.wa_fld
+        else:
+            gparams['Omega_fld'] = 0
+        # gparams['Omega_fld'] = 1 - self.omega0
+        
+        # gparams['w0_fld'] = self.w0_fld 
+        # gparams['wa_fld'] = self.wa_fld
+        # gparams['Omega_ur'] = self.omega_ur   # do not set Omega_ur if
+        # set N_ur
         numass = get_neutrino_masses(self.m_nu, self.nu_hierarchy)
 
         #Set up massive neutrinos
@@ -285,7 +296,8 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             gparams['m_ncdm'] = '%.8f,%.8f,%.8f' % (numass[2], numass[1], numass[0])
             gparams['N_ncdm'] = 3
             # gparams['N_ur'] = 0.00641
-            gparams['N_ur'] = self.N_ur - 3
+            # gparams['N_ur'] = self.N_ur - 3
+            gparams['N_ur'] = self.N_ur
             #Neutrino accuracy: Default pk_ref.pre has tol_ncdm_* = 1e-10,
             #which takes 45 minutes (!) on my laptop.
             #tol_ncdm_* = 1e-8 takes 20 minutes and is machine-accurate.
@@ -303,7 +315,8 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             #Spend less time on neutrino power for smaller neutrino mass
             gparams['ncdm_fluid_trigger_tau_over_tau_k'] = 30000.* (self.m_nu / 0.4)
         else:
-            gparams['N_ur'] = 3.046
+            # gparams['N_ur'] = 3.046
+            gparams['N_ur'] = self.N_ur
 
         #Initial cosmology
         pre_params.update(gparams)
@@ -331,7 +344,14 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         # feed in the parameters and generate the powerspec object
         print("cambfile: generating the powerspec object...")
         engine  = CLASS.ClassEngine(pre_params)
+        # powspec = CLASS.Spectra(engine) # powerspec is an object
+
+        bg = CLASS.Background(engine)
+        pre_params['Omega_fld'] = 1 - self.omega0 + bg.Omega0_lambda  # so that Omega0_lambda == 0 (forced)
+
+        engine  = CLASS.ClassEngine(pre_params)
         powspec = CLASS.Spectra(engine) # powerspec is an object
+
 
         #Save directory
         camb_output = "camb_linear/"
