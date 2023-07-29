@@ -5,6 +5,7 @@ different clusters
 from typing import List, Union, Any, TextIO
 import os.path
 import math
+import numpy as np
 
 class ClusterClass:
     """
@@ -295,6 +296,11 @@ class BIOClass(ClusterClass):
         super().__init__(*args, nproc=nproc, timelimit=timelimit,
             cluster_name=cluster_name, cores=cores, mpi_ranks=mpi_ranks, threads=threads, **kwargs)
         self.mpi_ranks = mpi_ranks 
+
+        if memory == 115:
+            n_jobs = math.ceil(256/nproc)
+            memory1 = int(1024 * .95 / n_jobs)
+            memory = np.min([memory, memory1])  # such that more than 8 jobs could be run simultaneously
         self.memory : int = memory
 
     def _queue_directive(self, name: Union[str, TextIO],
