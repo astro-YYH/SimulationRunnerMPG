@@ -67,7 +67,7 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'normal', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.04, alpha_s: float = 0, MWDM_therm: float = 0,      
+            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.046, alpha_s: float = 0, MWDM_therm: float = 0,      
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
@@ -344,13 +344,13 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         # feed in the parameters and generate the powerspec object
         print("cambfile: generating the powerspec object...")
         engine  = CLASS.ClassEngine(pre_params)
-        # powspec = CLASS.Spectra(engine) # powerspec is an object
-
-        bg = CLASS.Background(engine)
-        pre_params['Omega_fld'] = 1 - self.omega0 + bg.Omega0_lambda  # so that Omega0_lambda == 0 (forced)
-
-        engine  = CLASS.ClassEngine(pre_params)
         powspec = CLASS.Spectra(engine) # powerspec is an object
+
+        # bg = CLASS.Background(engine)
+        # pre_params['Omega_fld'] = 1 - self.omega0 + bg.Omega0_lambda  # so that Omega0_lambda == 0 (forced)
+
+        # engine  = CLASS.ClassEngine(pre_params)
+        # powspec = CLASS.Spectra(engine) # powerspec is an object
 
 
         #Save directory
@@ -645,7 +645,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['WindModel'] = 'nowind'
         config['BlackHoleOn'] = 0
         config['OutputPotential'] = 0
-        # config['MetalReturnOn'] = 0   # unknown parameter
+        config['MetalReturnOn'] = 0   # unknown parameter for some version of MP-Gadget3
 
         # Removed due to no need for baryon
         # if self.separate_gas:

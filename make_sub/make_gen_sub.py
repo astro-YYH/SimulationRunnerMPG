@@ -45,7 +45,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         alphas:     float, MWDM:   float,
         nproc :     int,   cores: int, mpi_ranks: int, threads: int,
         outdir:     str = "data",
-        gadget_dir: str = "~/bigdata/MP-Gadget3/",
+        gadget_dir: str = "~/bigdata/MP-Gadget/",
         python:     str = "python", # it's annoying
         py_script:  str = "make_sim_sub.py",
         cluster_class: str = "clusters.BIOClass"):
