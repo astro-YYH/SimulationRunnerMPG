@@ -111,7 +111,7 @@ class SimulationICs(object):
         assert wa_fld < 1 and wa_fld > -1
         self.wa_fld = wa_fld
 
-        assert N_ur > 0
+        assert N_ur >= 0
         self.N_ur = N_ur
 
         assert alpha_s < 1 and alpha_s > -1
