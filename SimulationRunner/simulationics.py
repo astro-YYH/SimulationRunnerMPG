@@ -119,7 +119,7 @@ class SimulationICs(object):
 
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
-        self.omega_ur = omegag * 0.22710731766023898 * self.N_ur
+        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur)
         assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
@@ -316,7 +316,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             gparams['ncdm_fluid_trigger_tau_over_tau_k'] = 30000.* (self.m_nu / 0.4)
         else:
             # gparams['N_ur'] = 3.046
-            gparams['N_ur'] = self.N_ur
+            gparams['N_ur'] = self.N_ur # for mnu = 0, N_ur cannot be less than 3.046 in CLASS
 
         #Initial cosmology
         pre_params.update(gparams)
@@ -437,14 +437,20 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Total matter density, not CDM matter density.
         config['Omega0']      = self.omega0
-        config['OmegaLambda'] = 0  # set to 0 since Omega_fld is enabled
+        
         config['OmegaBaryon'] = self.omegab
         config['HubbleParam'] = self.hubble
         config['Redshift']    = self.redshift
 
-        config["Omega_fld"]   = 1 - self.omega0
-        config["w0_fld"]      = self.w0_fld
-        config["wa_fld"]      = self.wa_fld
+        # dark energy models
+        if self.w0_fld != -1.0 or self.wa_fld != 0.:
+            config['OmegaLambda'] = 0  # set to 0 since Omega_fld is enabled
+            config["Omega_fld"]   = 1 - self.omega0
+            config["w0_fld"]      = self.w0_fld
+            config["wa_fld"]      = self.wa_fld
+        else:
+            config['OmegaLambda'] = 1 - self.omega0
+
         config["MWDM_therm"]  = self.MWDM_therm
 
         config["Omega_ur"]    = self.omega_ur
@@ -602,11 +608,15 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['TimeLimitCPU'] = int(60 * 60 * self._cluster.timelimit - 300)
         config['TimeMax']      = 1. / (1 + self.redend)
         config['Omega0']       = self.omega0
-        config['OmegaLambda']  = 0
-
-        config['Omega_fld'] = 1 - self.omega0
-        config["w0_fld"]      = self.w0_fld
-        config["wa_fld"]      = self.wa_fld
+        
+        # dark energy models
+        if self.w0_fld != -1.0 or self.wa_fld != 0.:
+            config['OmegaLambda']  = 0
+            config['Omega_fld'] = 1 - self.omega0
+            config["w0_fld"]      = self.w0_fld
+            config["wa_fld"]      = self.wa_fld
+        else:
+            config['OmegaLambda']  = 1 - self.omega0 # LambdaCDM
 
         config["Omega_ur"]    = self.omega_ur
 
