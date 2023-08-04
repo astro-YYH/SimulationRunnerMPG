@@ -1,6 +1,5 @@
 /tests/
 *.csv
-*.json
 *.submit
 *.out
 test*
