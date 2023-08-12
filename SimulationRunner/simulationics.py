@@ -67,7 +67,7 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'normal', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1,           wa_fld:   float = 0, N_ur: float = 3.046, alpha_s: float = 0, MWDM_therm: float = 0,      
+            w0_fld:        float = -1.,           wa_fld:   float = 0., N_ur: float = 3.046, alpha_s: float = 0, MWDM_therm: float = 0,      
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
@@ -450,6 +450,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             config["wa_fld"]      = self.wa_fld
         else:
             config['OmegaLambda'] = 1 - self.omega0
+            config["Omega_fld"]   = 0
 
         config["MWDM_therm"]  = self.MWDM_therm
 
