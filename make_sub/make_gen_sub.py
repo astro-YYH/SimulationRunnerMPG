@@ -15,6 +15,8 @@ python make_gen_sub.py
 --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
 
 python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --points="135, 136, 137, 123, 124, 125, 75, 76, 77" --box=100 --npart=300 --nproc=224 --cores=56 --mpi_ranks=8 --threads=28 --py_script=make_sim_sub.py --gadget_dir=/work2/01317/yyang440/frontera/MP-Gadget/ --cluster_class=clusters.FronteraClass --outdir_base=/work2/01317/yyang440/frontera/tentative_sims/cosmo_11p
+
+python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_2x5.json  --box=100 --npart=300 --nproc=168 --cores=56 --mpi_ranks=12 --threads=14 --py_script=make_sim_sub.py --gadget_dir=/work2/01317/yyang440/frontera/MP-Gadget/ --cluster_class=clusters.FronteraClass --outdir_base=/work2/01317/yyang440/frontera/tentative_sims/test_11p --submit_base=test
 '''
 from typing import Generator
 import argparse
@@ -73,8 +75,8 @@ def write_gen_submit(index: int, box: int,   npart: int,
         gadget_dir: str = "~/bigdata/MP-Gadget/",
         python:     str = "python", # it's annoying
         py_script:  str = "make_sim_sub.py",
-        cluster_class: str = "clusters.BIOClass"):
-    with open("gen_Box{}_Part{}_{}.submit".format(box, npart, str(index).zfill(4)), "w") as f:
+        cluster_class: str = "clusters.BIOClass", submit_base: str = "gen"):
+    with open("{}_Box{}_Part{}_{}.submit".format(submit_base, box, npart, str(index).zfill(4)), "w") as f:
         f.write("#!/bin/bash\n")
         write_directives(f, cluster_class, outdir)
         f.write("hostname\n")
@@ -124,20 +126,21 @@ if __name__ == "__main__":
 
     param_dicts = take_params_dict(Latin_dict)
 
-    if args.points == None:
-        points = list(range(len(param_dicts)))
-    else:
+    if args.points != None:
         points = [int(num) for num in args.points.split(',')]
+    else:
+        points = None
+
     # handle the param file generation one-by-one
     for i, param_dict in enumerate(param_dicts):
-        if i not in points:
+        if points != None and i not in points:
             continue
         # outdir auto generated, since we will have many folders
         outdir = "{}_Box{}_Part{}_{}".format(args.outdir_base, args.box, args.npart, str(i).zfill(4))
 
         write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores, mpi_ranks=args.mpi_ranks, threads=args.threads,
             outdir=outdir, gadget_dir=args.gadget_dir,
-            cluster_class=cc,
+            cluster_class=cc, submit_base=args.submit_base,
             **param_dict)
 
 
