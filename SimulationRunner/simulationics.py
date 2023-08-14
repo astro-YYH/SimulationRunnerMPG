@@ -119,7 +119,7 @@ class SimulationICs(object):
 
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
-        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur)
+        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur - 3.046)  # the convention for MP-Gadget is different from CLASS (Omega_ur)
         assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
@@ -316,7 +316,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             gparams['ncdm_fluid_trigger_tau_over_tau_k'] = 30000.* (self.m_nu / 0.4)
         else:
             # gparams['N_ur'] = 3.046
-            gparams['N_ur'] = self.N_ur # for mnu = 0, N_ur cannot be less than 3.046 in CLASS
+            gparams['N_ur'] = self.N_ur # for mnu = 0, N_ur cannot be set to 0 in CLASS
 
         #Initial cosmology
         pre_params.update(gparams)
