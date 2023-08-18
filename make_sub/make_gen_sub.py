@@ -14,7 +14,7 @@ python make_gen_sub.py
 --cluster_class=clusters.BIOClass
 --outdir_base=/rhome/yyang440/bigdata/tentative_sim_suite/cosmo_11p
 
-python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --points="135, 136, 137, 123, 124, 125, 75, 76, 77" --box=100 --npart=300 --nproc=224 --cores=56 --mpi_ranks=8 --threads=28 --py_script=make_sim_sub.py --gadget_dir=/work2/01317/yyang440/frontera/MP-Gadget/ --cluster_class=clusters.FronteraClass --outdir_base=/work2/01317/yyang440/frontera/tentative_sims/cosmo_11p
+python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --points="99, 100, 101, 186, 187, 188, 222, 223, 224, 156, 157, 158, 87, 88, 89, 144, 145, 146" --box=100 --npart=300 --nproc=224 --cores=56 --mpi_ranks=8 --threads=28 --py_script=make_sim_sub.py --gadget_dir=/work2/01317/yyang440/frontera/MP-Gadget/ --cluster_class=clusters.FronteraClass --outdir_base=/work2/01317/yyang440/frontera/tentative_sims/cosmo_11p --submit_base=new_HF
 
 python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_2x5.json  --box=100 --npart=300 --nproc=168 --cores=56 --mpi_ranks=12 --threads=14 --py_script=make_sim_sub.py --gadget_dir=/work2/01317/yyang440/frontera/MP-Gadget/ --cluster_class=clusters.FronteraClass --outdir_base=/work2/01317/yyang440/frontera/tentative_sims/test_11p --submit_base=test
 '''
