@@ -840,7 +840,8 @@ def get_neutrino_masses(total_mass: float, hierarchy: str) -> np.ndarray:
         nu_M32 = nu_M32n
         #If the total mass is below that allowed by the hierarchy,
         #assign one active neutrino.
-        if total_mass < np.sqrt(nu_M32n) + np.sqrt(nu_M21):
+        # if total_mass < np.sqrt(nu_M32n) + np.sqrt(nu_M21):
+        if total_mass < .06:
             return np.array([total_mass, 0, 0])
     elif hierarchy == 'inverted':
         nu_M32 = -nu_M32i
