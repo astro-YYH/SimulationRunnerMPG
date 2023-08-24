@@ -30,7 +30,7 @@ class MatterDesign(LatinDesign):
     '''
     def __init__(self, omegab_bounds: Tuple, omega0_bounds: Tuple, 
             hubble_bounds: Tuple, scalar_amp_bounds: Tuple, 
-            ns_bounds: Tuple, w0_bounds: Tuple, wa_bounds: Tuple, mnu_bounds: Tuple, Neff_bounds: Tuple, alphas_bounds: Tuple, MWDM_bounds: Tuple) -> None:
+            ns_bounds: Tuple, w0_bounds: Tuple, wa_bounds: Tuple, mnu_bounds: Tuple, Neff_bounds: Tuple, alphas_bounds: Tuple, MWDM_inverse_bounds: Tuple) -> None:
         # initialise Parameter instances
         omega0     = ContinuousParameter('omega0',     *omega0_bounds)
         omegab     = ContinuousParameter('omegab',     *omegab_bounds)
@@ -42,10 +42,10 @@ class MatterDesign(LatinDesign):
         mnu        = ContinuousParameter('mnu',        *mnu_bounds)
         Neff       = ContinuousParameter('Neff',       *Neff_bounds)
         alphas     = ContinuousParameter('alphas',     *alphas_bounds)
-        MWDM       = ContinuousParameter('MWDM',       *MWDM_bounds)
+        MWDM_inverse       = ContinuousParameter('MWDM_inverse',       *MWDM_inverse_bounds)
 
         parameter_space = ParameterSpace([
-            omega0, omegab, hubble, scalar_amp, ns, w0, wa, mnu, Neff, alphas, MWDM])
+            omega0, omegab, hubble, scalar_amp, ns, w0, wa, mnu, Neff, alphas, MWDM_inverse])
 
         super(MatterDesign, self).__init__(parameter_space)
 
