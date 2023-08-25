@@ -38,7 +38,10 @@ def take_params_dict(Latin_dict: dict) -> Generator:
         param_dict = {}
 
         for key in parameter_names:
-            param_dict[key] = Latin_dict[key][i]
+            if key == 'MWDM_inverse':
+                param_dict['MWDM'] = 1.0 / Latin_dict[key][i]
+            else:
+                param_dict[key] = Latin_dict[key][i]
         
         yield param_dict
 
@@ -55,9 +58,11 @@ def write_directives(f, cluster_class, outdir):
         f.write("# SBATCH --mail-user=yyang440@ucr.edu\n")
         f.write("# SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
     elif cluster_class == "clusters.FronteraClass":
-        f.write("#SBATCH --partition=small\n")    
+        f.write("#SBATCH --partition=intel\n")    # now generate the submission files on hpcc
+        f.write("#SBATCH --mem=6G\n")
+        f.write("#SBATCH --cpus-per-task=1\n")
         f.write("#SBATCH --job-name={}\n".format(outdir[-8:]))   
-        f.write("#SBATCH --time=4:00:00\n") 
+        f.write("#SBATCH --time=6:00:00\n") 
         f.write("#SBATCH --nodes=1\n")
         f.write("#SBATCH --ntasks-per-node=1\n")
         f.write("# SBATCH --mail-type=end\n")
