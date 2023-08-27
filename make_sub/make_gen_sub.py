@@ -87,7 +87,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("hostname\n")
         f.write("which python\n")
         f.write("date\n")
-        f.write("python {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
+        f.write("python -u {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
         f.write("date\n")           
 
 if __name__ == "__main__":
