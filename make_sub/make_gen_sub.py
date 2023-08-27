@@ -38,7 +38,10 @@ def take_params_dict(Latin_dict: dict) -> Generator:
         param_dict = {}
 
         for key in parameter_names:
-            param_dict[key] = Latin_dict[key][i]
+            if key == 'MWDM_inverse':
+                param_dict['MWDM'] = 1.0 / Latin_dict[key][i]
+            else:
+                param_dict[key] = Latin_dict[key][i]
         
         yield param_dict
 
@@ -56,7 +59,7 @@ def write_directives(f, cluster_class, outdir: str = None):
         f.write("# SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
     elif cluster_class == "clusters.FronteraClass":
         f.write("#SBATCH --partition=small\n")    
-        f.write("#SBATCH --job-name=gen_sub\n")   
+        f.write("#SBATCH --job-name={}\n".format(outdir[-8:]))   
         f.write("#SBATCH --time=4:00:00\n") 
         f.write("#SBATCH --nodes=1\n")
         f.write("#SBATCH --ntasks-per-node=1\n")
@@ -82,7 +85,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("hostname\n")
         f.write("which python\n")
         f.write("date\n")
-        f.write("python {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
+        f.write("python -u {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
         f.write("date\n")           
 
 if __name__ == "__main__":

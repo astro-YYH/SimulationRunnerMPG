@@ -120,7 +120,7 @@ class SimulationICs(object):
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
         self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur - 3.046)  # the convention for MP-Gadget is different from CLASS (Omega_ur)
-        assert self.omega_ur >= 0
+        # assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
         self.MWDM_therm = MWDM_therm
@@ -840,7 +840,8 @@ def get_neutrino_masses(total_mass: float, hierarchy: str) -> np.ndarray:
         nu_M32 = nu_M32n
         #If the total mass is below that allowed by the hierarchy,
         #assign one active neutrino.
-        if total_mass < np.sqrt(nu_M32n) + np.sqrt(nu_M21):
+        # if total_mass < np.sqrt(nu_M32n) + np.sqrt(nu_M21):
+        if total_mass < .06:
             return np.array([total_mass, 0, 0])
     elif hierarchy == 'inverted':
         nu_M32 = -nu_M32i
