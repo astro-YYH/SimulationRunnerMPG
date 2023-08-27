@@ -42,7 +42,7 @@ def take_params_dict(Latin_dict: dict) -> Generator:
         
         yield param_dict
 
-def write_directives(f, cluster_class, outdir):
+def write_directives(f, cluster_class, outdir: str = None):
     if cluster_class == "clusters.BIOClass":
         f.write("#SBATCH --partition=intel\n")    
         f.write("#SBATCH --job-name={}\n".format(outdir[-8:]))   
@@ -56,7 +56,7 @@ def write_directives(f, cluster_class, outdir):
         f.write("# SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
     elif cluster_class == "clusters.FronteraClass":
         f.write("#SBATCH --partition=small\n")    
-        f.write("#SBATCH --job-name={}\n".format(outdir[-8:]))   
+        f.write("#SBATCH --job-name=gen_sub\n")   
         f.write("#SBATCH --time=4:00:00\n") 
         f.write("#SBATCH --nodes=1\n")
         f.write("#SBATCH --ntasks-per-node=1\n")
@@ -112,6 +112,7 @@ if __name__ == "__main__":
     
     parser.add_argument("--py_script", type=str, default="make_sim_sub.py")
     parser.add_argument("--submit_base", type=str, default="gen")
+    parser.add_argument("--single_submit", type=int, default=0)
 
     args = parser.parse_args()
 
@@ -132,13 +133,22 @@ if __name__ == "__main__":
         points = None
 
     # handle the param file generation one-by-one
-    for i, param_dict in enumerate(param_dicts):
-        if points != None and i not in points:
-            continue
+    if args.single_submit == True:
+        with open(f"{args.submit_base}.submit", "w") as f:
+            f.write("#!/bin/bash\n")
+            write_directives(f, cc)
+            f.write("hostname\n")
+            f.write("which python\n")
+            f.write("date\n")
+        f.close()
+    else:
+        for i, param_dict in enumerate(param_dicts):
+            if points != None and i not in points:
+                continue
         # outdir auto generated, since we will have many folders
-        outdir = "{}_Box{}_Part{}_{}".format(args.outdir_base, args.box, args.npart, str(i).zfill(4))
+            outdir = "{}_Box{}_Part{}_{}".format(args.outdir_base, args.box, args.npart, str(i).zfill(4))
 
-        write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores, mpi_ranks=args.mpi_ranks, threads=args.threads,
+            write_gen_submit(index=i,py_script=args.py_script, npart=args.npart, box=args.box, nproc=args.nproc, cores=args.cores, mpi_ranks=args.mpi_ranks, threads=args.threads,
             outdir=outdir, gadget_dir=args.gadget_dir,
             cluster_class=cc, submit_base=args.submit_base,
             **param_dict)
