@@ -670,6 +670,9 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['CoolingOn'] = 0
         config['StarformationOn'] = 0
 
+        if self.cluster.cluster_name == "FronteraClass":
+            config['MaxMemSizePerNode'] = 0.8
+
         #Add other config parameters
         config = self._other_params(config)
         config.update(self._cluster.cluster_runtime())
