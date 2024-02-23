@@ -18,7 +18,6 @@ python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_90x3.json --p
 
 python make_gen_sub.py --json_file=../latin_design/matterLatin_11p_2x5.json  --box=100 --npart=300 --nproc=168 --cores=56 --mpi_ranks=12 --threads=14 --py_script=make_sim_sub.py --gadget_dir=/work2/01317/yyang440/frontera/MP-Gadget/ --cluster_class=clusters.FronteraClass --outdir_base=/work2/01317/yyang440/frontera/tentative_sims/test_11p --submit_base=test
 '''
-from typing import Generator
 import argparse
 import json
 # from SimulationRunner import simulationics, clusters
@@ -49,13 +48,13 @@ def take_params_dict(Latin_dict: dict):
 
 def write_directives(f, cluster_class, outdir: str = None, ntasks: int = 56, gen_index: int = 0):
     if cluster_class == "hpcc":
-        f.write("#SBATCH --partition=batch\n")    
+        f.write("#SBATCH --partition=epyc\n")    
         f.write("#SBATCH --job-name={}\n".format(outdir[-8:]))   
-        f.write("#SBATCH --time=6:0:00\n") 
+        f.write("#SBATCH --time=48:0:00\n") 
         f.write("#SBATCH --nodes=1\n")
         f.write("#SBATCH --ntasks-per-node=1\n")
         f.write("#SBATCH --cpus-per-task=1\n")
-        f.write("#SBATCH --mem=6G\n")
+        f.write("#SBATCH --mem=10G\n")
         f.write("# SBATCH --mail-type=end\n")
         f.write("# SBATCH --mail-user=yyang440@ucr.edu\n")
         f.write("# SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
