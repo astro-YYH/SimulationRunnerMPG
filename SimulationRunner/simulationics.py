@@ -119,8 +119,8 @@ class SimulationICs(object):
 
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
-        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur)
-        assert self.omega_ur >= 0
+        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur - 3.046)  # the convention for MP-Gadget is different from CLASS (Omega_ur)
+        # assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
         self.MWDM_therm = MWDM_therm
@@ -316,7 +316,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             gparams['ncdm_fluid_trigger_tau_over_tau_k'] = 30000.* (self.m_nu / 0.4)
         else:
             # gparams['N_ur'] = 3.046
-            gparams['N_ur'] = self.N_ur # for mnu = 0, N_ur cannot be less than 3.046 in CLASS
+            gparams['N_ur'] = self.N_ur # for mnu = 0, N_ur cannot be set to 0 in CLASS
 
         #Initial cosmology
         pre_params.update(gparams)
@@ -670,6 +670,9 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['CoolingOn'] = 0
         config['StarformationOn'] = 0
 
+        if self.cluster.cluster_name == "FronteraClass":
+            config['MaxMemSizePerNode'] = 0.8
+
         #Add other config parameters
         config = self._other_params(config)
         config.update(self._cluster.cluster_runtime())
@@ -840,7 +843,8 @@ def get_neutrino_masses(total_mass: float, hierarchy: str) -> np.ndarray:
         nu_M32 = nu_M32n
         #If the total mass is below that allowed by the hierarchy,
         #assign one active neutrino.
-        if total_mass < np.sqrt(nu_M32n) + np.sqrt(nu_M21):
+        # if total_mass < np.sqrt(nu_M32n) + np.sqrt(nu_M21):
+        if total_mass < .06:
             return np.array([total_mass, 0, 0])
     elif hierarchy == 'inverted':
         nu_M32 = -nu_M32i
