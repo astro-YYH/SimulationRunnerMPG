@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/rhome/yyang440/bigdata/SimulationRunner11P')
+
 import datetime
 current_time = datetime.datetime.now()
 from SimulationRunner import simulationics, clusters
