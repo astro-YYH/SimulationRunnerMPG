@@ -297,7 +297,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             gparams['N_ncdm'] = 3
             # gparams['N_ur'] = 0.00641
             # gparams['N_ur'] = self.N_ur - 3
-            gparams['N_ur'] = self.N_ur
+            gparams['N_ur'] = self.N_ur - gparams['N_ncdm'] * 1.013198221453432 # for N_ncdm = 3, N_ur = N_ur^desired - 3.0395946643602962
             #Neutrino accuracy: Default pk_ref.pre has tol_ncdm_* = 1e-10,
             #which takes 45 minutes (!) on my laptop.
             #tol_ncdm_* = 1e-8 takes 20 minutes and is machine-accurate.
