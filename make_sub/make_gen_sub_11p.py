@@ -38,7 +38,10 @@ def take_params_dict(Latin_dict: dict):
         param_dict = {}
 
         for key in parameter_names:
-            param_dict[key] = Latin_dict[key][i]
+            if key == 'MWDM_inverse':
+                param_dict['MWDM'] = 1.0 / Latin_dict[key][i]
+            else:
+                param_dict[key] = Latin_dict[key][i]
         param_dicts.append(param_dict)
         
     return param_dicts
@@ -52,7 +55,6 @@ def write_directives(f, cluster_class, outdir: str = None, ntasks: int = 56, gen
         f.write("#SBATCH --ntasks-per-node=1\n")
         f.write("#SBATCH --cpus-per-task=1\n")
         f.write("#SBATCH --mem=10G\n")
-        f.write("#SBATCH --output=slurm-%x_%j.out\n")
         f.write("# SBATCH --mail-type=end\n")
         f.write("# SBATCH --mail-user=yyang440@ucr.edu\n")
         f.write("# SBATCH --exclude=c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47\n\n")
@@ -71,7 +73,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         hubble:     float, omega0: float, omegab: float,
         scalar_amp: float, ns:     float, w0:     float,
         wa:         float, mnu:    float, Neff:   float,
-        alphas:     float,
+        alphas:     float, MWDM:   float,
         nproc :     int,   cores: int, mpi_ranks: int, threads: int,
         outdir:     str = "data",
         gadget_dir: str = "~/bigdata/MP-Gadget/",
@@ -84,7 +86,7 @@ def write_gen_submit(index: int, box: int,   npart: int,
         f.write("hostname\n")
         f.write("which python\n")
         f.write("date\n")
-        f.write("python -u {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
+        f.write("python -u {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={}\n".format(py_script, str(box), str(npart), str(hubble), str(omega0), str(omegab),str(scalar_amp),str(ns), str(w0), str(wa), str(mnu), str(Neff), str(alphas), str(MWDM), str(nproc),str(cores), str(mpi_ranks), str(threads), outdir, gadget_dir, python, cluster_class))
         f.write("date\n")           
 
 if __name__ == "__main__":
@@ -153,7 +155,7 @@ if __name__ == "__main__":
                     param_dict = param_dicts[i]
         # outdir auto generated, since we will have many folders
                     outdir = "{}_Box{}_Part{}_{}".format(args.outdir_base, args.box, args.npart, str(i).zfill(4))
-                    f.write("python -u {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={} &\n".format(args.py_script, str(args.box), str(args.npart), param_dict["hubble"], param_dict["omega0"], param_dict["omegab"],param_dict["scalar_amp"],param_dict["ns"], param_dict["w0"], param_dict["wa"], param_dict["mnu"], param_dict["Neff"], param_dict["alphas"], str(args.nproc),str(args.cores), str(args.mpi_ranks), str(args.threads), outdir, args.gadget_dir, "python", cc))
+                    f.write("python -u {} --box={} --npart={} --hubble={} --omega0={} --omegab={} --scalar_amp={} --ns={} --w0={} --wa={} --mnu={} --Neff={} --alphas={} --MWDM={} --nproc={} --cores={} --mpi_ranks={} --threads={} --outdir={} --gadget_dir={} --python={} --cluster_class={} &\n".format(args.py_script, str(args.box), str(args.npart), param_dict["hubble"], param_dict["omega0"], param_dict["omegab"],param_dict["scalar_amp"],param_dict["ns"], param_dict["w0"], param_dict["wa"], param_dict["mnu"], param_dict["Neff"], param_dict["alphas"], param_dict["MWDM"], str(args.nproc),str(args.cores), str(args.mpi_ranks), str(args.threads), outdir, args.gadget_dir, "python", cc))
                 f.write("wait\n")
                 f.write("date\n")
             f.close()
