@@ -3,9 +3,9 @@ library(SLHD)
 
 set.seed(1)
 
-t <- 4 # number of slices
+t <- 130 # number of slices
 m <- 3 # number of samples per slice
-k <- 11 # number of parameters per sample
+k <- 10 # number of parameters per sample
 #Maximin-distance sliced Latin hypercube designs
 D2<-maximinSLHD(t = t, m = m, k = k) 
 
