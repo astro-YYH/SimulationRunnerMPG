@@ -105,10 +105,10 @@ class SimulationICs(object):
         self.ns      = ns
         self.unitary = unitary
 
-        assert w0_fld < 0
+        # assert w0_fld < 0
         self.w0_fld = w0_fld
 
-        assert wa_fld < 1 and wa_fld > -1
+        # assert wa_fld < 1 and wa_fld > -1
         self.wa_fld = wa_fld
 
         assert N_ur >= 0
@@ -277,27 +277,39 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
         #Lambda is computed self-consistently
         if self.w0_fld != -1.0 or self.wa_fld != 0.:
-            gparams['Omega_fld'] = 1 - self.omega0
+            gparams['Omega_Lambda'] = 0
             gparams['w0_fld'] = self.w0_fld 
             gparams['wa_fld'] = self.wa_fld
         else:
             gparams['Omega_fld'] = 0
-        # gparams['Omega_fld'] = 1 - self.omega0
+
+        if (w0 + wa + 1) * wa <= 0: # if not phantom-crossing
+            gparams['use_ppf'] = 'no'
         
-        # gparams['w0_fld'] = self.w0_fld 
-        # gparams['wa_fld'] = self.wa_fld
-        # gparams['Omega_ur'] = self.omega_ur   # do not set Omega_ur if
-        # set N_ur
         numass = get_neutrino_masses(self.m_nu, self.nu_hierarchy)
 
         #Set up massive neutrinos
         if self.m_nu > 0:
             print("cambfile: setting up massive neutrinos...")
-            gparams['m_ncdm'] = '%.8f,%.8f,%.8f' % (numass[2], numass[1], numass[0])
-            gparams['N_ncdm'] = 3
+            # gparams['m_ncdm'] = '%.8f,%.8f,%.8f' % (numass[2], numass[1], numass[0])
+            # gparams['N_ncdm'] = 3
+
+            m_ncdm = ''
+            N_ncdm = 0
+            for i, numa in enumerate(numass):
+                if numa == 0:
+                    continue
+                if N_ncdm == 0:
+                    m_ncdm += '%.8f' % numa
+                else:
+                    m_ncdm += ',%.8f' % numa 
+                N_ncdm += 1           
+            gparams['m_ncdm'] = m_ncdm
+            gparams['N_ncdm'] = N_ncdm
+            
             # gparams['N_ur'] = 0.00641
             # gparams['N_ur'] = self.N_ur - 3
-            gparams['N_ur'] = self.N_ur
+            gparams['N_ur'] = self.N_ur - gparams['N_ncdm'] * 1.013198221453432 # for N_ncdm = 3, N_ur = N_ur^desired - 3.0395946643602962
             #Neutrino accuracy: Default pk_ref.pre has tol_ncdm_* = 1e-10,
             #which takes 45 minutes (!) on my laptop.
             #tol_ncdm_* = 1e-8 takes 20 minutes and is machine-accurate.
@@ -310,7 +322,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             #This disables the fluid approximations, which make P_nu not match 
             # camb on small scales.
             #We need accurate P_nu to initialise our neutrino code.
-            gparams['ncdm_fluid_approximation'] = 2
+            gparams['ncdm_fluid_approximation'] = 3 # disable approximation; # enum ncdmfa_method {ncdmfa_mb,ncdmfa_hu,ncdmfa_CLASS,ncdmfa_none};
             #Does nothing unless ncdm_fluid_approximation = 2
             #Spend less time on neutrino power for smaller neutrino mass
             gparams['ncdm_fluid_trigger_tau_over_tau_k'] = 30000.* (self.m_nu / 0.4)
@@ -442,7 +454,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         config['HubbleParam'] = self.hubble
         config['Redshift']    = self.redshift
 
-        # dark energy models
+        # MP-Gadget dark energy models
         if self.w0_fld != -1.0 or self.wa_fld != 0.:
             config['OmegaLambda'] = 0  # set to 0 since Omega_fld is enabled
             config["Omega_fld"]   = 1 - self.omega0
@@ -827,7 +839,7 @@ d_tot stands for (delta rho_tot/rho_tot)(k,z) with rho_Lambda NOT included in rh
  quantities divided by -k^2 with k in Mpc^-1; use format=camb to match CAMB)
 t_i   stands for theta_i(k,z) with above normalization
 t_tot stands for (sum_i [rho_i+p_i] theta_i)/(sum_i [rho_i+p_i]))(k,z)
-1:k (h/Mpc)              2:d_g                    3:d_b                    4:d_cdm                  5:d_ur        6:d_ncdm[0]              7:d_ncdm[1]              8:d_ncdm[2]              9:d_tot                 10:phi     11:psi                   12:h                     13:h_prime               14:eta                   15:eta_prime     16:t_g                   17:t_b                   18:t_ur        19:t_ncdm[0]             20:t_ncdm[1]             21:t_ncdm[2]             22:t_tot"""
+%s""" % " ".join(f"{index}. {item} " for index, item in enumerate(transfer.dtype.names, start=1))
     #This format matches the default output by CLASS command line.
     np.savetxt(transferfile, transfer, header=header)
 
