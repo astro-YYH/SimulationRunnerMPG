@@ -280,12 +280,11 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             gparams['Omega_Lambda'] = 0
             gparams['w0_fld'] = self.w0_fld 
             gparams['wa_fld'] = self.wa_fld
+            if (gparams['w0_fld'] + gparams['wa_fld'] + 1) * (1 + gparams['w0_fld']) > 0: # if not phantom-crossing
+                gparams['use_ppf'] = 'no'
         else:
             gparams['Omega_fld'] = 0
 
-        if (w0 + wa + 1) * wa <= 0: # if not phantom-crossing
-            gparams['use_ppf'] = 'no'
-        
         numass = get_neutrino_masses(self.m_nu, self.nu_hierarchy)
 
         #Set up massive neutrinos
