@@ -67,7 +67,7 @@ class SimulationICs(object):
             rscatter:      bool  = False,        m_nu:     float = 0,
             nu_hierarchy:  str   = 'normal', uvb:      str   = "pu",
             nu_acc:        float = 1e-5,         unitary:  bool  = True,
-            w0_fld:        float = -1.,           wa_fld:   float = 0., N_ur: float = 3.046, alpha_s: float = 0, MWDM_therm: float = 0,      
+            w0_fld:        float = -1.,           wa_fld:   float = 0., N_ur: float = 3.044, alpha_s: float = 0, MWDM_therm: float = 0,      
             cluster_class: Type[clusters.StampedeClass] = clusters.StampedeClass, 
             gadget_dir:    str = "~/codes/MP-Gadget/",
             python:        str = "python",
@@ -119,7 +119,7 @@ class SimulationICs(object):
 
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
-        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur - 3.046)  # the convention for MP-Gadget is different from CLASS (Omega_ur)
+        self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur - 1.013198221453432*3)  # MP-Gadget
         # assert self.omega_ur >= 0
 
         assert MWDM_therm >= 0
