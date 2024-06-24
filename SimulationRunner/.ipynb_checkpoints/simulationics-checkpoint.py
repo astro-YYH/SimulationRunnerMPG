@@ -119,6 +119,7 @@ class SimulationICs(object):
 
         T_CMB = 2.7255  # default cmb temperature
         omegag = 4.480075654158969e-07 * T_CMB**4 / self.hubble**2
+        self.omegag = omegag
         self.omega_ur = omegag * 0.22710731766023898 * (self.N_ur - 1.013198221453432*3)  # MP-Gadget
         # assert self.omega_ur >= 0
 
@@ -365,7 +366,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
 
 
         #Save directory
-        camb_output = "camb_linear/"
+        camb_output = "camb_linear/" # actually class now
         camb_outdir = os.path.join(self.outdir, camb_output)
         try:
             os.mkdir(camb_outdir)
@@ -456,11 +457,11 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         # MP-Gadget dark energy models
         if self.w0_fld != -1.0 or self.wa_fld != 0.:
             config['OmegaLambda'] = 0  # set to 0 since Omega_fld is enabled
-            config["Omega_fld"]   = 1 - self.omega0
+            config["Omega_fld"]   = 1 - self.omega0 - self.omegag
             config["w0_fld"]      = self.w0_fld
             config["wa_fld"]      = self.wa_fld
         else:
-            config['OmegaLambda'] = 1 - self.omega0
+            config['OmegaLambda'] = 1 - self.omega0 - self.omegag
             config["Omega_fld"]   = 0
 
         config["MWDM_therm"]  = self.MWDM_therm
@@ -624,11 +625,11 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         # dark energy models
         if self.w0_fld != -1.0 or self.wa_fld != 0.:
             config['OmegaLambda']  = 0
-            config['Omega_fld'] = 1 - self.omega0
+            config['Omega_fld'] = 1 - self.omega0 - self.omegag
             config["w0_fld"]      = self.w0_fld
             config["wa_fld"]      = self.wa_fld
         else:
-            config['OmegaLambda']  = 1 - self.omega0 # LambdaCDM
+            config['OmegaLambda']  = 1 - self.omega0 - self.omegag # LambdaCDM
 
         config["Omega_ur"]    = self.omega_ur
 
