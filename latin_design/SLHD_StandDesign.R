@@ -3,7 +3,7 @@ library(SLHD)
 
 set.seed(1)
 
-t <- 130 # number of slices
+t <- 6 # number of slices
 m <- 3 # number of samples per slice
 k <- 10 # number of parameters per sample
 #Maximin-distance sliced Latin hypercube designs
