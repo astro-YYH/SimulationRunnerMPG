@@ -1,5 +1,7 @@
 import sys
-sys.path.append('/rhome/yyang440/bigdata/SimulationRunner11P')
+import os
+# Add the parent directory to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import datetime
 current_time = datetime.datetime.now()

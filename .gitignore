@@ -7,3 +7,4 @@ test*
 /scratch/
 /SimulationRunner/__pycache__/
 */.ipynb_checkpoints/
+*/*local*

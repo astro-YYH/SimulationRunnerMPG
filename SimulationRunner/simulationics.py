@@ -14,7 +14,7 @@ import classylss
 import classylss.binding as CLASS
 from . import utils
 from . import clusters
-from . import cambpower
+# from . import cambpower
 import datetime
 
 # DM-only
@@ -818,8 +818,8 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
                 cwd=self.outdir)
 
             zstr = self._camb_zstr(self.redshift)
-            cambpower.check_ic_power_spectra(genic_output, camb_zstr=zstr,
-                m_nu=self.m_nu, outdir=self.outdir, accuracy=pkaccuracy)
+            # cambpower.check_ic_power_spectra(genic_output, camb_zstr=zstr,
+                # m_nu=self.m_nu, outdir=self.outdir, accuracy=pkaccuracy)
 
             self.do_gadget_build(gadget_config)
         print("Make simulation: done.", datetime.datetime.now(),"\n")
