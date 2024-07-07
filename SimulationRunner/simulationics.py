@@ -457,11 +457,11 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
         # MP-Gadget dark energy models
         if self.w0_fld != -1.0 or self.wa_fld != 0.:
             config['OmegaLambda'] = 0  # set to 0 since Omega_fld is enabled
-            config["Omega_fld"]   = 1 - self.omega0 - self.omegag
+            config["Omega_fld"]   = 1 - self.omega0 - self.omegag - self.omega_ur
             config["w0_fld"]      = self.w0_fld
             config["wa_fld"]      = self.wa_fld
         else:
-            config['OmegaLambda'] = 1 - self.omega0 - self.omegag
+            config['OmegaLambda'] = 1 - self.omega0 - self.omegag - self.omega_ur
             config["Omega_fld"]   = 0
 
         config["MWDM_therm"]  = self.MWDM_therm
