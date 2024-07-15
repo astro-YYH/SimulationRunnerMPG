@@ -9,3 +9,4 @@ test*
 */.ipynb_checkpoints/
 */__pycache__/
 */*_local*
+.DS_Store
