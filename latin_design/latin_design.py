@@ -58,12 +58,20 @@ class LatinDesign(InitialDesignBase):
         """
         slhd = pd.read_csv(filename)
 
-        # sliced latin hypercube
-        slices = slhd.values[:, 0]
-        if slice == None:
-            X_design_aux = slhd.values[:, 1:]
+        num_params = len(self.parameter_space.parameter_names)
+        if num_params != slhd.shape[1] - 1:
+            slices = np.ones(slhd.shape[0])
+            if slice == None:
+                X_design_aux = slhd.values
+            else:
+                X_design_aux = slhd.values[slices == slice, :]
         else:
-            X_design_aux = slhd.values[slices == slice, 1:]
+            # sliced latin hypercube
+            slices = slhd.values[:, 0]
+            if slice == None:
+                X_design_aux = slhd.values[:, 1:]
+            else:
+                X_design_aux = slhd.values[slices == slice, 1:]
 
         bounds = self.parameter_space.get_bounds()
 
