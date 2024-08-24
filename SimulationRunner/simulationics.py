@@ -464,6 +464,8 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             config['OmegaLambda'] = 1 - self.omega0 - self.omegag - self.omega_ur
             config["Omega_fld"]   = 0
 
+        config["CLASS_Radiation"]      = 1 # CLASS convention Omega_tot = Omega_m + Omega_g + Omega_Lambda + Omega_fld + Omega_ur + Omega_K = 1 
+
         config["MWDM_therm"]  = self.MWDM_therm
 
         config["Omega_ur"]    = self.omega_ur
