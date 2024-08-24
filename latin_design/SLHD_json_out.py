@@ -7,7 +7,7 @@ matter = MatterDesign(
     hubble_bounds=(0.64, 0.74), 
     scalar_amp_bounds=(1.7*1e-9, 2.5*1e-9), 
     ns_bounds=(0.95, 1.),
-    w0_bounds=(-1.3, -.5),
+    w0_bounds=(-1.3, -.7),
     # wa_bounds=(-0.7, 0.5),
     wa_bounds=(-1., 0.5),
     mnu_bounds=(0.06, 0.15),
@@ -19,5 +19,5 @@ matter = MatterDesign(
 # number of samples
 # point_count = 50
 # matter.save_slhd_json(filename="SLHD_t120_m3_k11.csv", out_filename="matterLatin_11p_120x3.json")
-matter.save_slhd_json(filename="SLHD_narrow_t4_m3_k10.csv", out_filename="matterLatin_narrow_10p_4x3.json") # test set
+matter.save_slhd_json(filename="SLHD_narrow_t99_m3_k10.csv", out_filename="matterLatin_narrow_10p_99x3.json") # test set
 # matter.save_slhd_json(filename="SLHD_t280_m4_k11.csv", out_filename="matterLatin_11p_280x4.json")  # test
