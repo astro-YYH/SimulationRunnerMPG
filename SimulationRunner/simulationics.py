@@ -322,7 +322,7 @@ n_s    = {}; rscatter = {}; m_nu = {}; nu_hierarchy = {}; w0 = {}; wa = {};
             #This disables the fluid approximations, which make P_nu not match 
             # camb on small scales.
             #We need accurate P_nu to initialise our neutrino code.
-            gparams['ncdm_fluid_approximation'] = 2 # 3: disable approximation; # enum ncdmfa_method {ncdmfa_mb,ncdmfa_hu,ncdmfa_CLASS,ncdmfa_none};
+            gparams['ncdm_fluid_approximation'] = 3 # 3: disable approximation; # enum ncdmfa_method {ncdmfa_mb,ncdmfa_hu,ncdmfa_CLASS,ncdmfa_none};
             #Does nothing unless ncdm_fluid_approximation = 2
             #Spend less time on neutrino power for smaller neutrino mass
             gparams['ncdm_fluid_trigger_tau_over_tau_k'] = 30000.* (self.m_nu / 0.4)
