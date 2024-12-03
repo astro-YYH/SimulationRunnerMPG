@@ -38,5 +38,5 @@ matter = MatterDesign(
 # number of samples
 # point_count = 50
 # matter.save_slhd_json(filename="SLHD_t120_m3_k11.csv", out_filename="matterLatin_11p_120x3.json")
-matter.save_slhd_json(filename="SLHD_t1_m10_k10.csv", out_filename="matterLatin_EE2_narrow_1x10.json") # test set
+matter.save_slhd_json(filename="SLHD_narrow_t10_m5_k10.csv", out_filename="matterLatin_EE2_narrow_10x5.json") # test set
 # matter.save_slhd_json(filename="SLHD_t280_m4_k11.csv", out_filename="matterLatin_11p_280x4.json")  # test
